@@ -16,7 +16,7 @@ Yes. Codex PPT is a `SKILL.md`-based skill. In addition to Codex, it works with 
 
 This skill is developed and tested primarily with Codex, so Codex offers the best compatibility and is recommended.
 
-Different agents have different image-generation capabilities and tool interfaces. Outside Codex, you will usually need to configure `gpt-image-2.5-flare` or a third-party OpenAI-compatible image-generation API. See [Installation and Configuration](/en/installation.md), and let the AI guide you through setup based on your current environment.
+Different agents have different image-generation capabilities and tool interfaces. Outside Codex, you will usually need to configure `gpt-image-2.6-flare` or a third-party OpenAI-compatible image-generation API. See [Installation and Configuration](/en/installation.md), and let the AI guide you through setup based on your current environment.
 
 ## Q: How Do I Update the Skill to the Latest Version?
 
@@ -40,7 +40,7 @@ After confirming that the model works, ask the AI to address specific issues suc
 
 Prefer the built-in image tool available in the current environment. Its actual model, resolution, and controls depend on that environment; a subscription or successful image response does not verify them. If precise size or quality settings are required and the built-in tool does not expose them, use an API/CLI fallback that supports those parameters. API/CLI fallback output defaults to 2K 16:9; try 4K for text-heavy or blurry slides. GPT Image 2.5 output above `2560x1440` pixels is experimental; inspect the actual result.
 
-API/CLI fallback defaults to `gpt-image-2.5-flare`; select `--model gpt-image-2.5-sunburst` to switch. Both support `xhigh` / `max` quality and transparent PNG/WebP. Defaults remain 2K 16:9 and `medium`. Older models retain their parameter limits; check which models and parameters your provider supports.
+API/CLI fallback defaults to `gpt-image-2.6-flare`; select `--model gpt-image-2.6-sunburst` to switch. Both support `xhigh` / `max` quality and transparent PNG/WebP. Defaults remain 2K 16:9 and `medium`. Older models retain their parameter limits; check which models and parameters your provider supports.
 
 ## Q: Why Confirm the Outline First?
 

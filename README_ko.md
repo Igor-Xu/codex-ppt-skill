@@ -4,7 +4,7 @@
 
 [![문서](https://img.shields.io/badge/%EB%AC%B8%EC%84%9C-%EC%82%AC%EC%9A%A9%20%EC%95%88%EB%82%B4-111827)](https://ningzimu.github.io/codex-ppt-skill/#/ko/) [![지원](https://img.shields.io/badge/%EC%A7%80%EC%9B%90-%EB%8F%84%EC%9B%80%EB%B0%9B%EA%B8%B0-2CA5E0)](https://t.me/CodexPPT) [![ClawHub](https://img.shields.io/badge/ClawHub-codex--ppt-cd3b35)](https://clawhub.ai/ningzimu/codex-ppt) [![ClawMama](https://img.shields.io/badge/ClawMama-codex--ppt-2CA5E0)](https://app.clawmama.run/skills/5lak48/hermes?utm_source=github&utm_medium=issue&utm_campaign=skill_outreach_ningzimu_codex_ppt_skill) [![GitHub stars](https://img.shields.io/github/stars/ningzimu/codex-ppt-skill?style=flat&logo=github&label=stars)](https://github.com/ningzimu/codex-ppt-skill/stargazers) [![GitHub forks](https://img.shields.io/github/forks/ningzimu/codex-ppt-skill?style=flat&logo=github&label=forks)](https://github.com/ningzimu/codex-ppt-skill/forks)
 
-PowerPoint 덱을 생성하는 Codex용 skill입니다. Codex 외에도 Claude Code, OpenClaw, Hermes Agent 등 `SKILL.md`를 지원하는 다른 에이전트에서도 사용할 수 있으며, 이런 비(非)Codex 환경에서는 보통 `gpt-image-2.5-flare`, 서드파티 이미지 API, 또는 OpenAI 호환 이미지 생성 엔드포인트 설정이 필요합니다. 이 skill은 글, 리포트, 논문, 강의 노트 등의 원본 자료를 "한 페이지 통이미지" 형식의 프레젠테이션으로 변환합니다. 먼저 개요와 시각 스타일을 기획하고, 각 슬라이드를 전면 이미지로 생성한 뒤, 마지막에 로컬 스크립트로 이미지들을 `.pptx` 파일로 조립합니다.
+PowerPoint 덱을 생성하는 Codex용 skill입니다. Codex 외에도 Claude Code, OpenClaw, Hermes Agent 등 `SKILL.md`를 지원하는 다른 에이전트에서도 사용할 수 있으며, 이런 비(非)Codex 환경에서는 보통 `gpt-image-2.6-flare`, 서드파티 이미지 API, 또는 OpenAI 호환 이미지 생성 엔드포인트 설정이 필요합니다. 이 skill은 글, 리포트, 논문, 강의 노트 등의 원본 자료를 "한 페이지 통이미지" 형식의 프레젠테이션으로 변환합니다. 먼저 개요와 시각 스타일을 기획하고, 각 슬라이드를 전면 이미지로 생성한 뒤, 마지막에 로컬 스크립트로 이미지들을 `.pptx` 파일로 조립합니다.
 
 https://github.com/user-attachments/assets/ad0fa884-87e4-4528-8030-f2dd0211693c
 
@@ -44,7 +44,7 @@ skill 설계와 사용에 대한 기본 소개는 [good-skill-design.pptx](asset
 ## 특징
 
 - 여러 에이전트에서 동작: Codex, Claude Code, OpenClaw, Hermes Agent 등 `SKILL.md` 기반 환경을 지원합니다. 내장 이미지 생성·편집 도구를 우선 사용할 수 있는 Codex가 가장 권장되는 환경입니다.
-- 서드파티 이미지 공급자 연동: OpenAI 호환 엔드포인트, AtlasCloud, `base URL`, 커스텀 모델명 설정을 지원하므로, API/CLI fallback에서 `gpt-image-2.5-flare`나 호환 이미지 모델을 사용할 수 있습니다.
+- 서드파티 이미지 공급자 연동: OpenAI 호환 엔드포인트, AtlasCloud, `base URL`, 커스텀 모델명 설정을 지원하므로, API/CLI fallback에서 `gpt-image-2.6-flare`나 호환 이미지 모델을 사용할 수 있습니다.
 - 안정적인 단계형 워크플로: 전체 덱 생성 전에 개요, 슬라이드 수, 시각 스타일, 이미지 백엔드, 샘플 슬라이드를 확인하여 완성 PPT 생성 시의 이탈과 재작업을 줄입니다.
 - 원샷이 아닌 가이드형: 계속 진행하기 전에 `outline.md`, 슬라이드별 핵심 포인트, 스타일 방향, 샘플 슬라이드 품질을 확인하도록 요청합니다.
 - 낮은 준비 부담: 글, 리포트, 논문, 강의 노트, Markdown 파일, 개요, PDF, Word 문서 등을 모두 시작 자료로 사용할 수 있습니다.
@@ -222,7 +222,7 @@ skill은 다음 워크플로를 따릅니다:
 ## 사용 팁
 
 - 현재 환경에서 호출 가능한 내장 이미지 도구를 우선 사용합니다. 실제 모델, 해상도, 조절 가능한 매개변수는 환경에 따라 다르며, 구독 여부나 이미지 생성 성공만으로 확인할 수 없습니다. 정확한 크기나 품질 지정이 필요하지만 내장 도구가 해당 매개변수를 제공하지 않으면 이를 지원하는 API/CLI fallback을 선택하세요. API/CLI fallback의 기본 출력은 2K 16:9이며, 텍스트가 많거나 흐릿한 슬라이드는 4K를 시도할 수 있습니다. GPT Image 2.5에서 `2560x1440` 픽셀을 초과하는 출력은 실험적 기능이므로 실제 결과를 확인하세요.
-- API/CLI fallback의 기본 모델은 `gpt-image-2.5-flare`이며, `--model gpt-image-2.5-sunburst`로 전환할 수 있습니다. 두 모델은 `xhigh` / `max` 품질과 투명 PNG/WebP를 지원합니다. 기본값은 2K 16:9와 `medium`을 유지합니다. 이전 모델의 매개변수 제한은 유지되며, 서드파티 서비스가 지원하는 모델과 매개변수를 확인해야 합니다.
+- API/CLI fallback의 기본 모델은 `gpt-image-2.6-flare`이며, `--model gpt-image-2.6-sunburst`로 전환할 수 있습니다. 두 모델은 `xhigh` / `max` 품질과 투명 PNG/WebP를 지원합니다. 기본값은 2K 16:9와 `medium`을 유지합니다. 이전 모델의 매개변수 제한은 유지되며, 서드파티 서비스가 지원하는 모델과 매개변수를 확인해야 합니다.
 - 특정 슬라이드의 내용, 레이아웃, 색상, 문구가 마음에 들지 않으면, 전체 덱을 다시 생성하는 대신 현재 에이전트에게 그 슬라이드를 상세히 다듬어 달라고 요청하세요.
 
 ![슬라이드 단건 수정 예시: PPT를 열고 주석을 클릭해 수정할 영역을 표시](assets/single-slide-revision-example.png)

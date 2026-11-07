@@ -4,7 +4,7 @@
 Used when Codex's built-in image tool is unavailable, when the user explicitly
 opts into API mode, or needs output controls exposed by the API.
 
-Defaults to gpt-image-2.5-flare and a structured prompt augmentation workflow.
+Defaults to gpt-image-2.6-flare and a structured prompt augmentation workflow.
 Reads OPENAI_API_KEY, and optionally OPENAI_BASE_URL for provider adapters or
 OpenAI-compatible proxy providers.
 """
@@ -27,7 +27,7 @@ from urllib.parse import urlparse
 from image_providers import create_image_provider
 from image_providers.atlascloud import atlascloud_model_for_operation
 
-DEFAULT_MODEL = "gpt-image-2.5-flare"
+DEFAULT_MODEL = "gpt-image-2.6-flare"
 DEFAULT_SIZE = "2560x1440"
 DEFAULT_QUALITY = "medium"
 DEFAULT_OUTPUT_FORMAT = "png"
@@ -246,7 +246,23 @@ def _validate_gpt_image_2_size(size: str) -> None:
         )
 
 
+def _validate_gpt_image_2_6_size(size: str) -> None:
+    if size == "auto":
+        return
+    parsed = _parse_size(size)
+    if parsed is None:
+        _die("size must be auto or WIDTHxHEIGHT, for example 1536x864.")
+    width, height = parsed
+    if width % 16 != 0 or height % 16 != 0:
+        _die("GPT Image 2.6 size width and height must be multiples of 16px.")
+    if max(width, height) / min(width, height) > 3.0:
+        _die("GPT Image 2.6 size long edge to short edge ratio must not exceed 3:1.")
+
+
 def _validate_size(size: str, model: str) -> None:
+    if _is_gpt_image_2_6_model(model):
+        _validate_gpt_image_2_6_size(size)
+        return
     if _is_gpt_image_2_model(model) or _is_gpt_image_2_5_model(model):
         _validate_gpt_image_2_size(size)
         return
@@ -260,8 +276,10 @@ def _validate_size(size: str, model: str) -> None:
 def _validate_quality(quality: str, model: str) -> None:
     if quality not in ALLOWED_QUALITIES:
         _die("quality must be one of low, medium, high, xhigh, max, or auto.")
-    if quality in {"xhigh", "max"} and not _is_gpt_image_2_5_model(model):
-        _die("xhigh and max quality require gpt-image-2.5-flare or gpt-image-2.5-sunburst.")
+    if quality in {"xhigh", "max"} and not (
+        _is_gpt_image_2_5_model(model) or _is_gpt_image_2_6_model(model)
+    ):
+        _die("xhigh and max quality require GPT Image 2.5 or 2.6 Flare/Sunburst.")
 
 
 def _validate_background(background: Optional[str]) -> None:
@@ -278,7 +296,7 @@ def _validate_model(model: str) -> None:
     if GPT_IMAGE_MODEL_PREFIX not in model:
         _die(
             "model must be a GPT Image model name containing 'gpt-image-' "
-            "(for example gpt-image-2.5-flare, gpt-image-2.5-sunburst, gpt-image-2, "
+            "(for example gpt-image-2.6-flare, gpt-image-2.6-sunburst, gpt-image-2.5-flare, gpt-image-2, "
             "gpt-image-1, or gpt-image-1-mini)."
         )
 
@@ -294,6 +312,13 @@ def _is_gpt_image_2_5_model(model: str) -> bool:
     ))
 
 
+def _is_gpt_image_2_6_model(model: str) -> bool:
+    return bool(re.search(
+        r"(?:^|/)gpt-image-2\.6-(?:flare|sunburst)(?:-\d{4}-\d{2}-\d{2})?(?:/|$)",
+        model,
+    ))
+
+
 def _validate_transparency(background: Optional[str], output_format: str) -> None:
     if background == "transparent" and output_format not in {"png", "webp"}:
         _die("transparent background requires output-format png or webp.")
@@ -305,12 +330,14 @@ def _validate_model_specific_options(
     background: Optional[str],
     input_fidelity: Optional[str] = None,
 ) -> None:
+    if _is_gpt_image_2_6_model(model) and input_fidelity is not None:
+        _die("input_fidelity is not supported in GPT Image 2.6; omit this parameter.")
     if not _is_gpt_image_2_model(model):
         return
     if background == "transparent":
         _die(
             "transparent backgrounds are not supported in gpt-image-2. "
-            "Use --model gpt-image-2.5-flare --background transparent --output-format png instead."
+            "Use --model gpt-image-2.6-flare --background transparent --output-format png instead."
         )
     if input_fidelity is not None:
         _die(
