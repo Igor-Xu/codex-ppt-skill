@@ -16,7 +16,7 @@
 
 本 skill 在 Codex 场景下开发和测试，对 Codex 的适配度最好，推荐优先使用。
 
-需要注意的是，不同 agent 的图片生成能力和工具接口不一样。如果不是在 Codex 中使用，通常需要配置 `gpt-image-2.5-flare` 或第三方 OpenAI 兼容格式的生图 API。具体配置方式可以参考[安装与配置](installation.md)，并在使用过程中让 AI 根据当前环境引导完成。
+需要注意的是，不同 agent 的图片生成能力和工具接口不一样。如果不是在 Codex 中使用，通常需要配置 `gpt-image-2.6-flare` 或第三方 OpenAI 兼容格式的生图 API。具体配置方式可以参考[安装与配置](installation.md)，并在使用过程中让 AI 根据当前环境引导完成。
 
 ## Q：如何更新 skill 到最新版本？
 
@@ -40,7 +40,7 @@
 
 优先使用当前环境可调用的内置生图工具；实际模型、分辨率和可调参数取决于环境，不能仅凭会员身份或成功出图确认。若需精确指定尺寸或质量，而内置工具未暴露这些参数，可选择支持相应参数的 API/CLI fallback。API/CLI fallback 默认输出为 2K 16:9；文字较多或仍模糊时可尝试 4K；GPT Image 2.5 超过 `2560x1440` 像素的输出属于实验性能力，需检查实际结果。
 
-API/CLI fallback 默认使用 `gpt-image-2.5-flare`，可用 `--model gpt-image-2.5-sunburst` 切换。两者支持 `xhigh` / `max` 质量及透明 PNG/WebP；默认仍为 2K 16:9、`medium`。旧模型保留原参数限制，第三方服务需确认其支持的模型和参数。
+API/CLI fallback 默认使用 `gpt-image-2.6-flare`，可用 `--model gpt-image-2.6-sunburst` 切换。两者支持 `xhigh` / `max` 质量及透明 PNG/WebP；默认仍为 2K 16:9、`medium`。旧模型保留原参数限制，第三方服务需确认其支持的模型和参数。
 
 ## Q：为什么要先确认大纲？
 

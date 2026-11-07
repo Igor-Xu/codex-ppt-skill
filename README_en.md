@@ -4,7 +4,7 @@
 
 [![Docs](https://img.shields.io/badge/Docs-Guide-111827)](https://ningzimu.github.io/codex-ppt-skill/#/en/) [![Support](https://img.shields.io/badge/Support-Get_Help-2CA5E0)](https://t.me/CodexPPT) [![ClawHub](https://img.shields.io/badge/ClawHub-codex--ppt-cd3b35)](https://clawhub.ai/ningzimu/codex-ppt) [![ClawMama](https://img.shields.io/badge/ClawMama-codex--ppt-2CA5E0)](https://app.clawmama.run/skills/5lak48/hermes?utm_source=github&utm_medium=issue&utm_campaign=skill_outreach_ningzimu_codex_ppt_skill) [![GitHub stars](https://img.shields.io/github/stars/ningzimu/codex-ppt-skill?style=flat&logo=github&label=stars)](https://github.com/ningzimu/codex-ppt-skill/stargazers) [![GitHub forks](https://img.shields.io/github/forks/ningzimu/codex-ppt-skill?style=flat&logo=github&label=forks)](https://github.com/ningzimu/codex-ppt-skill/forks)
 
-A Codex skill for generating PowerPoint decks. It can also be used in Claude Code, OpenClaw, Hermes Agent, and other agents that support `SKILL.md`; these non-Codex environments usually require configuring `gpt-image-2.5-flare`, a third-party image API, or an OpenAI-compatible image generation endpoint. It turns articles, reports, papers, course notes, and other source materials into image-based presentations: first plan the outline and visual style, then generate each full-slide image, and finally assemble the images into a `.pptx` file with a local script.
+A Codex skill for generating PowerPoint decks. It can also be used in Claude Code, OpenClaw, Hermes Agent, and other agents that support `SKILL.md`; these non-Codex environments usually require configuring `gpt-image-2.6-flare`, a third-party image API, or an OpenAI-compatible image generation endpoint. It turns articles, reports, papers, course notes, and other source materials into image-based presentations: first plan the outline and visual style, then generate each full-slide image, and finally assemble the images into a `.pptx` file with a local script.
 
 https://github.com/user-attachments/assets/ad0fa884-87e4-4528-8030-f2dd0211693c
 
@@ -44,7 +44,7 @@ For a basic introduction to skill design and usage, see [good-skill-design.pptx]
 ## Features
 
 - Works across multiple agents: supports Codex, Claude Code, OpenClaw, Hermes Agent, and other `SKILL.md`-based environments; Codex is the recommended environment because it can use the built-in image generation and image editing tools first.
-- Supports third-party image providers: works with OpenAI-compatible endpoints, AtlasCloud, `base URL`, and custom model names, so API/CLI fallback can use `gpt-image-2.5-flare` or compatible image models.
+- Supports third-party image providers: works with OpenAI-compatible endpoints, AtlasCloud, `base URL`, and custom model names, so API/CLI fallback can use `gpt-image-2.6-flare` or compatible image models.
 - Stable staged workflow: confirms the outline, slide count, visual style, image backend, and sample slide before full-deck generation, reducing drift and rework when generating a complete PPT.
 - Guided instead of one-shot: the skill asks you to confirm `outline.md`, per-slide key points, style direction, and sample-slide quality before continuing.
 - Low setup effort: articles, reports, papers, course notes, Markdown files, outlines, PDFs, and Word documents can all be used as starting material.
@@ -222,7 +222,7 @@ The skill follows this workflow:
 ## Usage Tips
 
 - Prefer the built-in image tool available in the current environment. Its actual model, resolution, and controls depend on that environment; a subscription or successful image response does not verify them. If precise size or quality settings are required and the built-in tool does not expose them, use an API/CLI fallback that supports those parameters. API/CLI fallback output defaults to 2K 16:9; try 4K for text-heavy or blurry slides. GPT Image 2.5 output above `2560x1440` pixels is experimental; inspect the actual result.
-- API/CLI fallback defaults to `gpt-image-2.5-flare`; select `--model gpt-image-2.5-sunburst` to switch. Both support `xhigh` / `max` quality and transparent PNG/WebP. Defaults remain 2K 16:9 and `medium`. Older models retain their parameter limits; check which models and parameters your provider supports.
+- API/CLI fallback defaults to `gpt-image-2.6-flare`; select `--model gpt-image-2.6-sunburst` to switch. Both support `xhigh` / `max` quality and transparent PNG/WebP. Defaults remain 2K 16:9 and `medium`. Older models retain their parameter limits; check which models and parameters your provider supports.
 - If you are unhappy with one specific slide's content, layout, colors, or wording, ask the current agent to refine that slide in detail instead of regenerating the whole deck.
 
 ![Single-slide revision example: open the PPT, click annotation, and mark the area to revise](assets/single-slide-revision-example.png)

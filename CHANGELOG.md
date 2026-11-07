@@ -4,6 +4,10 @@ Release notes are generated from this file. Keep changelog entries in English.
 
 ## Unreleased
 
+### Improvements
+
+- Default API image generation to GPT Image 2.6 Flare and support Sunburst while preserving 2.5 compatibility. (#1)
+
 ## 0.6.0
 
 ### Improvements

@@ -76,19 +76,19 @@ Updates are safe: runtime configuration such as API keys is stored in `~/.codex-
 
 You need an image backend available in the current environment: a built-in tool or a compatible image API. No single model is required.
 
-API/CLI fallback defaults to `gpt-image-2.5-flare`; select `--model gpt-image-2.5-sunburst` to switch. Both support `xhigh` / `max` quality and transparent PNG/WebP. Defaults remain 2K 16:9 and `medium`. Older models retain their parameter limits; check which models and parameters your provider supports.
+API/CLI fallback defaults to `gpt-image-2.6-flare`; select `--model gpt-image-2.6-sunburst` to switch. Both support `xhigh` / `max` quality and transparent PNG/WebP. Defaults remain 2K 16:9 and `medium`. Older models retain their parameter limits; check which models and parameters your provider supports.
 
 The AI checks whether the built-in tool is callable, then generates a sample to validate text and visual quality. Its actual model and parameters depend on the environment; a ChatGPT subscription or successful image response does not prove that 2.5 was used. Once API/CLI fallback is selected, configure the API key, base URL, and a provider-supported model as needed based on errors.
 
 ## Notes on Third-Party APIs
 
-This skill includes a script compatible with OpenAI's official image-generation interface. If you use a third-party `gpt-image-2.5-flare` relay API, try providing:
+This skill includes a script compatible with OpenAI's official image-generation interface. If you use a third-party `gpt-image-2.6-flare` relay API, try providing:
 
 - The relay service's base URL
   - If the relay service gives an endpoint such as `https://xxx/v1/images/generations`, set the base URL to `https://xxx/v1`.
   - If the relay service already gives `https://xxx/v1`, do not append another layer, which would produce `.../v1/v1`.
   - For official OpenAI, `OPENAI_BASE_URL` can be omitted; the default is the official `https://api.openai.com/v1`.
 - The relay service's API key
-- The exact `gpt-image-2.5-flare` model name used by the relay service
+- The exact `gpt-image-2.6-flare` model name used by the relay service
 
 After providing this information to the AI, ask it to generate an image. If it still does not work, the relay service may use a custom image-generation scheme that is not fully compatible with the OpenAI image API. Send the relay service's official image-generation documentation to the AI so it can learn the interface and adapt the image-generation script.

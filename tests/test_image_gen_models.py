@@ -17,6 +17,10 @@ import codex_ppt_runtime
 class ImageModelTests(unittest.TestCase):
     def test_new_models_accept_quality_and_custom_size(self):
         for model in (
+            "gpt-image-2.6-flare",
+            "gpt-image-2.6-sunburst",
+            "openai/gpt-image-2.6-flare/edit",
+            "openai/gpt-image-2.6-sunburst",
             "gpt-image-2.5-flare",
             "gpt-image-2.5-sunburst",
             "openai/gpt-image-2.5-flare-2026-09-08",
@@ -36,7 +40,7 @@ class ImageModelTests(unittest.TestCase):
                     image_gen._validate_quality(quality, model)
 
     def test_unknown_model_does_not_inherit_new_quality(self):
-        for model in ("gpt-image-2.5", "gpt-image-2.5-flare-invalid", "gpt-image-20"):
+        for model in ("gpt-image-2.5", "gpt-image-2.5-flare-invalid", "gpt-image-2.6", "gpt-image-2.6-flare-invalid", "gpt-image-20"):
             with self.subTest(model=model), self.assertRaises(SystemExit):
                 image_gen._validate_quality("max", model)
 
@@ -55,6 +59,20 @@ class ImageModelTests(unittest.TestCase):
                 with self.subTest(model=model, size=size), self.assertRaises(SystemExit):
                     image_gen._validate_size(size, model)
 
+    def test_2_6_size_constraints_and_edit_fidelity(self):
+        for model in ("gpt-image-2.6-flare", "gpt-image-2.6-sunburst"):
+            for size in ("auto", "1536x864", "2560x1440"):
+                with self.subTest(model=model, size=size):
+                    image_gen._validate_size(size, model)
+            for size in ("1025x1024", "3072x512", "0x1024", "invalid"):
+                with self.subTest(model=model, size=size), self.assertRaises(SystemExit):
+                    image_gen._validate_size(size, model)
+            image_gen._validate_model_specific_options(model=model, background="transparent")
+            with self.subTest(model=model), self.assertRaises(SystemExit):
+                image_gen._validate_model_specific_options(
+                    model=model, background=None, input_fidelity="high"
+                )
+
     def run_cli(self, *args):
         output = io.StringIO()
         with (
@@ -68,7 +86,7 @@ class ImageModelTests(unittest.TestCase):
 
     def test_cli_defaults_preserve_size_and_quality(self):
         result = self.run_cli("generate", "--prompt", "slide", "--dry-run")
-        self.assertEqual(result["model"], "gpt-image-2.5-flare")
+        self.assertEqual(result["model"], "gpt-image-2.6-flare")
         self.assertEqual(result["model"], codex_ppt_runtime.DEFAULT_MODEL)
         self.assertEqual(result["size"], "2560x1440")
         self.assertEqual(result["quality"], "medium")
@@ -82,12 +100,12 @@ class ImageModelTests(unittest.TestCase):
                     with self.subTest(command=command[0], fmt=fmt):
                         result = self.run_cli(
                             *command, "--prompt", "slide",
-                            "--model", "gpt-image-2.5-sunburst",
+                            "--model", "gpt-image-2.6-sunburst",
                             "--quality", "max", "--background", "transparent",
                             "--output-format", fmt,
                             "--out", str(Path(temp) / f"out.{fmt}"), "--dry-run",
                         )
-                        self.assertEqual(result["model"], "gpt-image-2.5-sunburst")
+                        self.assertEqual(result["model"], "gpt-image-2.6-sunburst")
                         self.assertEqual(result["quality"], "max")
                         self.assertEqual(result["background"], "transparent")
                         self.assertEqual(result["output_format"], fmt)
@@ -100,7 +118,7 @@ class ImageModelTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             jobs = Path(temp) / "jobs.jsonl"
             job = {
-                "prompt": "slide", "model": "gpt-image-2.5-sunburst",
+                "prompt": "slide", "model": "gpt-image-2.6-sunburst",
                 "quality": "xhigh", "background": "transparent", "output_format": "webp",
             }
             jobs.write_text(json.dumps(job) + "\n")
